@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-csrf_exempt
+@csrf_exempt
 def PostsView(request):
     if request.method == 'GET':
         posts = Post.objects.all() #querySet
