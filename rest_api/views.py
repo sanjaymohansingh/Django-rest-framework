@@ -179,15 +179,28 @@ from rest_framework import viewsets
 #         return self.destroy(request, id)
 
 # using viewsets
-class PostsView(viewsets.ViewSet):
-    def list(self, request):
-        posts = Post.objects.all() #querySet
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
-    def create(self, request):
-        serializer = PostSerializer(data=request.data)
+# class PostsView(viewsets.ViewSet):
+#     def list(self, request):
+#         posts = Post.objects.all() #querySet
+#         serializer = PostSerializer(posts, many=True)
+#         return Response(serializer.data)
+#     def create(self, request):
+#         serializer = PostSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# using genericviewsets
+class PostsView(viewsets.GenericViewSet, 
+                mixins.ListModelMixin, 
+                mixins.CreateModelMixin,
+                mixins.UpdateModelMixin,
+                mixins.RetrieveModelMixin,
+                mixins.DestroyModelMixin
+                ):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    
+   

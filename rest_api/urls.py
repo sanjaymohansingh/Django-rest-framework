@@ -6,6 +6,7 @@ router = routers.SimpleRouter()
 
 router.register('posts', PostsView, basename='posts')
 
+
 urlpatterns = [
     # path('posts/', PostsView),
     # path('details/<int:pk>/', Posts_detail),
@@ -19,4 +20,5 @@ urlpatterns = [
    
    # using APIView
     path('', include(router.urls))
+    
 ]
