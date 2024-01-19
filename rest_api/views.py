@@ -24,6 +24,9 @@ from rest_framework import mixins
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# using viewsets
+from rest_framework import viewsets
+
 # Create your views here.
 
 # using normal views
@@ -147,30 +150,44 @@ from rest_framework.permissions import IsAuthenticated
 
 
 # generic class based views
-class PostsView(generics.ListCreateAPIView, 
-                mixins.ListModelMixin, 
-                mixins.CreateModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.RetrieveModelMixin,
-                mixins.DestroyModelMixin
-                ):
-    serializer_class = PostSerializer
-    queryset = Post.objects.all()
-    lookup_field = 'id'
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+# class PostsView(generics.ListCreateAPIView, 
+#                 mixins.ListModelMixin, 
+#                 mixins.CreateModelMixin,
+#                 mixins.UpdateModelMixin,
+#                 mixins.RetrieveModelMixin,
+#                 mixins.DestroyModelMixin
+#                 ):
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.all()
+#     lookup_field = 'id'
+#     authentication_classes = [TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request, id):
-        if id:
-            return self.retrieve(request)
-        else:
-          return self.list(request)
+#     def get(self, request, id):
+#         if id:
+#             return self.retrieve(request)
+#         else:
+#           return self.list(request)
    
-    def post(self, request):
-        return self.create(request)
+#     def post(self, request):
+#         return self.create(request)
     
-    def put(self, request, id=None):
-        return self.update(request, id)
+#     def put(self, request, id=None):
+#         return self.update(request, id)
     
-    def delete(self, request, id):
-        return self.destroy(request, id)
+#     def delete(self, request, id):
+#         return self.destroy(request, id)
+
+# using viewsets
+class PostsView(viewsets.ViewSet):
+    def list(self, request):
+        posts = Post.objects.all() #querySet
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+    def create(self, request):
+        serializer = PostSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

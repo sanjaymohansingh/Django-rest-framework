@@ -1,5 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from .views import PostsView
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+
+router.register('posts', PostsView, basename='posts')
 
 urlpatterns = [
     # path('posts/', PostsView),
@@ -10,6 +15,8 @@ urlpatterns = [
     # path('details/<int:pk>/', Posts_detail.as_view()),
 
     # using generic class based views
-    path('posts/<int:id>/', PostsView.as_view()),
-    # path('details/<int:pk>/', Posts_detail.as_view()),
+    # path('posts/<int:id>/', PostsView.as_view()),
+   
+   # using APIView
+    path('', include(router.urls))
 ]
