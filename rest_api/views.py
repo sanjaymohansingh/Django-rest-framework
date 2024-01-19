@@ -20,6 +20,9 @@ from django.http import Http404
 from rest_framework import generics
 from rest_framework import mixins
 
+# authentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -154,6 +157,8 @@ class PostsView(generics.ListCreateAPIView,
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         if id:
